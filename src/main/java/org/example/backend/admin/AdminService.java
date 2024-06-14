@@ -10,7 +10,14 @@ public class AdminService {
     @Autowired
     private AdminDao adminDao;
 
-    public List<AdminApproveVo> getAllApprovals() {
-        return adminDao.getAllApprovals();
+    public List<AdminApproveVo> postAllApprovals() {
+        return adminDao.postAllApprovals();
+    }
+
+    public void setAdminApproval(int owner_id) {
+        System.out.println("[AdminMemberService] setAdminApproval()");
+
+        int result = adminDao.adminApprovalupdate(owner_id);
+
     }
 }
