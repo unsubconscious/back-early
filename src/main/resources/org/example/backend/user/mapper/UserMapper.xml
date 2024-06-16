@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 실제 인터페이스 경로랑 일치시켜야 함-->
+<mapper namespace="org.example.backend.user.mapper.UserMapper">
+
+    <!-- Users 매핑 : 회원 테이블과 회원권한 테이블을 1:다 매핑처리 -->
+    <resultMap type="User" id="userMap">
+        <id property="user_id" column="user_id" />
+
+        <result property="user_id" column="user_id" />
+        <result property="email" column="email" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="registration_date" column="registration_date" />
+        <result property="modification_date" column="modification_date" />
+
+        <collection property="authList" resultMap="authMap"></collection>
+    </resultMap>
+
+    <!-- UserAuth 매핑 -->
+    <resultMap type="UserAuth" id="authMap">
+        <result property="userId" column="user_id" />
+        <result property="auth" column="auth" />
+    </resultMap>
+
+    <!-- 회원 등록 -->
+    <insert id="insert">
+        INSERT INTO UserInformation( Email, Password, Name)
+        VALUES ( #{email}, #{password}, #{name})
+    </insert>
+
+    <!-- 회원 조회 -->
+    <select id="select" resultType="User">
+        SELECT *
+        FROM UserInformation
+        WHERE user_id = #{user_id}
+    </select>
+
+    <!-- 회원 조회 - id -->
+    <select id="login" resultMap="userMap">
+        SELECT u.user_id,
+        u.email
+        ,password
+        ,name
+        ,registration_date
+        ,modification_date
+        ,auth_no
+        ,auth
+        FROM userinformation u LEFT OUTER JOIN userinfo_auth auth
+        ON u.email = auth.user_id
+        WHERE u.email = #{email}
+    </select>
+
+<!--  login 테스트 진행전 쿼리 수정  -->
+
+    <!-- 회원 권한 등록 -->
+    <insert id="insertAuth">
+        INSERT INTO userinfo_auth( user_id, auth )
+        VALUES ( #{userId}, #{auth} )
+    </insert>
+
+<!--    &lt;!&ndash; 회원 수정 &ndash;&gt;-->
+<!--    <update id="update">-->
+<!--        UPDATE user-->
+<!--        SET user_id = #{userId}-->
+<!--        ,user_pw = #{userPw}-->
+<!--        ,name = #{name}-->
+<!--        ,email = #{email}-->
+<!--        WHERE user_id = #{userId}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; 회원 삭제 &ndash;&gt;-->
+<!--    <delete id="delete">-->
+<!--        DELETE FROM user-->
+<!--        WHERE user_id = #{userId}-->
+<!--    </delete>-->
+
+</mapper>

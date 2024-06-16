@@ -4,11 +4,9 @@ import lombok.Getter;
 import org.example.backend.store.StoreInformationVo;
 import org.example.backend.store.StoreRegistrationVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -18,10 +16,10 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    //음식점 목록 조회(카테고리)
+    //음식점 목록 조회(카테고리) 내위치 기반으로 조회하자
     @GetMapping("/CaList")
-    public List<StoreRegistrationVo> storeList(@RequestParam("canum") String num){
-        return searchService.storeList(num);
+    public List<StoreRegistrationVo> storeList(@RequestParam("canum") String num, @RequestParam("x") BigDecimal x ,@RequestParam("y") BigDecimal y){
+        return searchService.storeList(num,x,y);
 
 
     }
@@ -30,6 +28,15 @@ public class SearchController {
     @GetMapping("/menuList")
     public List<StoreInformationVo> menuList(@RequestParam("") int id){
         return searchService.menuList(id);
+    }
+
+    //주문하기
+    //고객아이디,상점아이디/주문내역/총가격 이렇게 값이 넘어와야한다.
+    @PostMapping("/order")
+    public int order(@RequestBody OrderVo orderVo) {
+
+
+        return searchService.order(orderVo);
     }
 
 

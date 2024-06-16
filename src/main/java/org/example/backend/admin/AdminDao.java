@@ -16,13 +16,13 @@ public class AdminDao {
 
     // 모든 상점 승인 정보 가져오기
     public List<AdminApproveVo> postAllApprovals() {
-        String sql = "SELECT owner_id, store_name, modification_date, approval_status FROM admin_approve";
+        String sql = "SELECT owner_id, store_name, modification_date, approval_status FROM StoreRegistration";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AdminApproveVo.class));
     }
 
     public int adminApprovalupdate(int owner_id){
 
-        String sql = "UPDATE admin_approve SET approval_status = 1 WHERE owner_id = ?";
+        String sql = "UPDATE StoreRegistration SET approval_status = 1 WHERE owner_id = ?";
 
         try {
             return jdbcTemplate.update(sql, owner_id);

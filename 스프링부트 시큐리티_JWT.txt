@@ -1,0 +1,32 @@
+◆ Spring Security 설정
+SecurityConfig
+- 필터 설정
+   * 1 - Jwt Request Filter
+	--> JWT 토큰 해석
+   * 2 - Jwt Auth Filter (Login)
+	* email
+	* password
+	--> JWT 토큰 생성
+
+- ▶ 인가 설정
+ * 정적자원 ALL
+ * /, /login - ALL
+ * /user/** - USER, ADMIN
+ * /admin/** - ADMIN
+
+- 인증 방식 설정
+ * 인메모리 방식
+ * JDBC 방식
+ * ▶ 커스텀 방식 (userDetailService : 사용자의 정보를 구체적으로 어떻게 작성할건지에 대한 비즈니스 로직 구조)
+(내가 강의를 보며 적용한 방식은 커스텀 방식)
+
+◆ 프로젝트 속성
+- 시크릿키 (JWT)
+prop
+
+◆ 회원 CRUD
+- Mapper / 인터페이스 작성
+- Service
+
+◆ DeliveryOracle 로그인 & 회원가입 - user 테스트 rest api test 토큰
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3OTQyNTMsInVubyI6IjEiLCJ1aWQiOiJ1c2VyIiwicm9sIjpbIlJPTEVfVVNFUiJdfQ.FN8RjlH7_xcvJxGUgN1jAfUOG3i5T5BDiB30cmHS6psbUtpPGxuCmquTamtQmcGHir5n1zQygWbPcr_t28ydHA

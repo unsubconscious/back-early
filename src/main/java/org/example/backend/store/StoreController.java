@@ -16,9 +16,9 @@ import java.io.IOException;
 public class StoreController {
     @Autowired
     private StoreService storeService;
-    private static final String URL="C:\\Users\\KOSTA\\Desktop\\finalfr\\public\\imgs\\";
+//    private static final String URL="C:\\Users\\KOSTA\\Desktop\\finalfr\\public\\imgs\\";
 
-//    private static final String URL="C:\\Users\\kjk98\\OneDrive\\바탕 화면\\koster\\frontend\\public\\imgs\\";
+    private static final String URL="C:\\Users\\kjk98\\OneDrive\\바탕 화면\\koster\\frontend\\public\\imgs\\";
 
 
     //상점등록
@@ -29,7 +29,9 @@ public class StoreController {
                                     @RequestParam("img") MultipartFile img,
                                     @RequestParam("storeX") BigDecimal storeX,
                                     @RequestParam("storeY") BigDecimal storeY,
-                                    @RequestParam("category") String category) throws IOException {
+                                    @RequestParam("category") String category,
+                                    @RequestParam("id") int id
+    ) throws IOException {
 
         //이미지 저장하기
         String saveName=null;
@@ -60,7 +62,7 @@ public class StoreController {
         storeRegistrationVo.setStore_y(storeY);
         storeRegistrationVo.setStore_ca(category);
         //유저아이디 나중에는 받아와야한다.
-        storeRegistrationVo.setOwner_id(1);
+        storeRegistrationVo.setOwner_id(id);
 
         System.out.println(address);
 

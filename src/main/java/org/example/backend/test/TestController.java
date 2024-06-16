@@ -1,11 +1,12 @@
 package org.example.backend.test;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.user.dto.CustomUser;
+import org.example.backend.user.dto.User;
+import org.example.backend.user.security.jwt.provider.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,11 +19,19 @@ public class TestController {
 //    @Autowired
 //    TestService testService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/hello")
-    public String test(){
+    @GetMapping("/api/userinfo")
+    public User getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(authHeader);
 
-        return "hello";
+        if (authentication == null) {
+            throw new RuntimeException("Invalid JWT token");
+        }
+
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        return customUser.getUser();
     }
 //    @GetMapping("/hello")
 //    public List<User> test(){
