@@ -35,7 +35,7 @@ public class AdminController {
 
     }
 
-//    실패한코드
+//    실패한코드 이유? (당연하지 RequestMethod.POST 로 요청했으므로 Body로 받아와야 한다.)
 //    @RequestMapping(value = "/approve", method = RequestMethod.POST)
 //    public void setAdminApproval(@RequestParam("owner_id") int owner_id){
 //        System.out.println("[AdminController] setAdminApproval()");

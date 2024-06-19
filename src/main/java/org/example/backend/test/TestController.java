@@ -1,6 +1,7 @@
 package org.example.backend.test;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.backend.user.dto.CustomUser;
 import org.example.backend.user.dto.User;
 import org.example.backend.user.security.jwt.provider.JwtTokenProvider;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api")
 //@RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class TestController {
 
     @GetMapping("/api/userinfo")
     public User getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        log.info(":::: jwt토큰으로부터 값 꺼내오기 ::::");
         Authentication authentication = jwtTokenProvider.getAuthentication(authHeader);
 
         if (authentication == null) {

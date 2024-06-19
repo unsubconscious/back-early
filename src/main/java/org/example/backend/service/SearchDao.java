@@ -58,11 +58,11 @@ public class SearchDao {
 
     //주문하기
     public int order(OrderVo orderVo){
-        String sql="INSERT INTO OrderInformation (customer_id, store_id, order_details,total_price) " +
-                "VALUES (?,?,?,?)";
+        String sql="INSERT INTO OrderInformation (customer_id, store_id, order_details,total_price,user_x,user_y) " +
+                "VALUES (?,?,?,?,?,?)";
         int rs=-1;
         try{
-            jdbcTemplate.update(sql,orderVo.getCustomerId(),orderVo.getStoreId(),orderVo.getOrderDetails(),orderVo.getTotalPrice());
+            jdbcTemplate.update(sql,orderVo.getCustomerId(),orderVo.getStoreId(),orderVo.getOrderDetails(),orderVo.getTotalPrice(),orderVo.getUser_x(),orderVo.getUser_y());
             rs=1;
 
         }catch (Exception e){
@@ -72,6 +72,29 @@ public class SearchDao {
 
 
         return rs;
+    }
+
+    //이메일 탐색
+    public String email(int id){
+
+        String sql="select Email from userinformation where user_id=?";
+        String email=null;
+
+        try{
+            email= jdbcTemplate.queryForObject(sql,String.class,id);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return email;
+    }
+
+    public List<OrderVo> getUserOrders(int userId) {
+        String sql = "SELECT * FROM orderinformation WHERE customer_id = ? ORDER BY orderId DESC";
+        RowMapper<OrderVo> rowMapper = BeanPropertyRowMapper.newInstance(OrderVo.class);
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
 }

@@ -33,6 +33,9 @@ public class UserServiceImpl implements UserService {
         2. 회원 등록
         3. 권한 등록
     */
+
+
+
     @Override
     public int insert(User user) throws Exception {
         //비번 암호화

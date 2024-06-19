@@ -29,4 +29,13 @@ public class SearchService {
     public int order(OrderVo orderVo){
         return searchDao.order(orderVo);
     }
+
+    //이메일탐색
+    public  String email(int id){
+        return  searchDao.email(id);
+    }
+
+    public List<OrderVo> getUserOrders(int userId) {
+        return searchDao.getUserOrders(userId);
+    }
 }

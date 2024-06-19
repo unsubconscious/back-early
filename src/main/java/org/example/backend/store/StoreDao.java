@@ -1,5 +1,6 @@
 package org.example.backend.store;
 
+import org.example.backend.service.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -124,4 +125,55 @@ public class StoreDao {
 
     }
 
+    //주문알람
+    public List<OrderVo> order(int id){
+
+        //이때 상태가 2가 아닌걸 하는 이유는 
+        //2일경우는 주문완료
+        System.out.println(id);
+        String sql = "SELECT * FROM orderinformation " +
+                "WHERE store_id = ? " +
+                "AND order_approval_status NOT IN (2, 3) " +
+                "ORDER BY order_id DESC;";
+        List<OrderVo> orders=new ArrayList<OrderVo>();
+        RowMapper<OrderVo> rowMapper= BeanPropertyRowMapper.newInstance(OrderVo.class);
+        try {
+            orders=jdbcTemplate.query(sql, rowMapper,id);
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+    //라이더 배정
+    //라이더 배정은 1 부여 주문 거절은 3부여ㅓ
+    public int rider(int id){
+        String sql ="UPDATE orderinformation SET order_approval_status = 1 WHERE order_id = ?";
+        int rs=-1;
+        try {
+            return jdbcTemplate.update(sql,id);
+        } catch (Exception e) {
+            // 예외 처리 로직 (예: 로깅)
+            e.printStackTrace();
+            return -1;
+        }
+
+
+    }
+
+    //주문거절
+    public int refuse(int id){
+        String sql ="UPDATE orderinformation SET order_approval_status = 3 WHERE order_id = ?";
+        int rs=-1;
+        try {
+            return jdbcTemplate.update(sql,id);
+        } catch (Exception e) {
+            // 예외 처리 로직 (예: 로깅)
+            e.printStackTrace();
+            return -1;
+        }
+
+
+    }
 }

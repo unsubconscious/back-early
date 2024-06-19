@@ -1,8 +1,8 @@
 package org.example.backend.store;
 
+import org.example.backend.service.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -49,6 +49,24 @@ public class StoreService {
     public int menudel(int id, String name){
            return storeDao.menudel(id,name);
     }
+
+    //주문알람
+    public List<OrderVo> order(int id){
+        return storeDao.order(id);
+    }
+
+    //라이더배정
+
+    public int rider(int id){
+        return storeDao.rider(id);
+    }
+
+    //주문거절
+    public int refuse(int id){
+        return storeDao.refuse(id);
+    }
+
+
 
 
 

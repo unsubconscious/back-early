@@ -3,6 +3,7 @@ package org.example.backend.service;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 
@@ -16,5 +17,7 @@ public class OrderVo {
     private int totalPrice;
     private int orderApprovalStatus;
     private Timestamp orderDate;
+    private BigDecimal user_x;
+    private BigDecimal user_y;
 
 }

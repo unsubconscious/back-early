@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.example.backend.store.StoreInformationVo;
 import org.example.backend.store.StoreRegistrationVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,7 +28,7 @@ public class SearchController {
 
     //메뉴정보 불러오기(음식점 상세페이지에서) 상점 아이디 받아올꺼임
     @GetMapping("/menuList")
-    public List<StoreInformationVo> menuList(@RequestParam("") int id){
+    public List<StoreInformationVo> menuList(@RequestParam("id") int id){
         return searchService.menuList(id);
     }
 
@@ -39,7 +41,22 @@ public class SearchController {
         return searchService.order(orderVo);
     }
 
+    //이메일탐색 음식점 상세 정보 페이지
+    //웹소켓을 위해 음식점 주인의 이메일 을 탐색한다.
+    @GetMapping("/email_shop")
+    public String email(@RequestParam("id") int id){
+        searchService.email(id);
 
+        return  searchService.email(id);
+    }
+
+    // 사용자 주문 정보 가져오기
+    @GetMapping("/details")
+    public ResponseEntity<List<OrderVo>> getUserOrders(@RequestParam("userId") int userId) {
+        System.out.println(userId);
+        List<OrderVo> orders = searchService.getUserOrders(userId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
 
 }
