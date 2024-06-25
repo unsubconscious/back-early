@@ -3,14 +3,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.backend.user.dto.User;
 
 public interface UserService {
-    //회원 등록
-    public int insert(User user) throws Exception;
+    // <회원 : user>
 
-    //회원 조회
+    //조회
     public User select(int email) throws Exception;
+
+    //등록
+    public int insert(User user) throws Exception;
 
     //로그인
     public void login(User user, HttpServletRequest request) throws Exception;
+
+    // <업체 : store>
+
+    public User select_store(int email) throws Exception;
+
+    public int insert_store(User user) throws Exception;
+
+    public void login_store(User user, HttpServletRequest request) throws Exception;
+
+    // <관리자 : admin>
+
+    public User select_admin(int email) throws Exception;
+
+    public int insert_admin(User user) throws Exception;
+
+    public void login_admin(User user, HttpServletRequest request) throws Exception;
+
+    // <라이더 : rider>
+
+    public User select_rider(int email) throws Exception;
+
+    public int insert_rider(User user) throws Exception;
+
+    public void login_rider(User user, HttpServletRequest request) throws Exception;
+
 
 //    //회원 수정
 //    public int update(User user) throws Exception;

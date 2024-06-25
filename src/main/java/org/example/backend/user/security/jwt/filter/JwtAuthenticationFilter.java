@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 /* 해당 로직에 대한 전체적인 흐름
             (/login)
    client -> filter -> server
-   1. username, password 인증 시도 (attemptAuthentication)
-      - 인증 실패 : response > status : 401을 담는다 (인증 x) (UNAUTHORIZED)
+   1. 넘겨 받은 username(id), password가 일치하는지 인증 시도 (인증을 시도하는 메소드 : attemptAuthentication)
+      - 인증 실패시 : response의 > status(상태코드 객체) : 즉 response(응답)을 받으면 status(상태코드 객체)에 401을 담아 응답한다.
+      (인증 x) (UNAUTHORIZED)
 
    2. 인증 성공 (successfulAuthentication)
     -> JWT 토큰을 생성
     -> response > headers > authorization : (JWT)
 
  */
-
 
 // JwtAuthenticationFilter는 스프링 시큐리티와 연결을 위해 UsernamePasswordAuthenticationFilter를 상속받아서 구현 해야 한다.
 @Slf4j
@@ -47,8 +47,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+
         // 필터 URL 경로 설정 : /login
-        setFilterProcessesUrl(JwtConstants.AUTH_LOGIN_URL); // /login
+        setFilterProcessesUrl(JwtConstants.AUTH_LOGIN_URL); // 실질적인 /login 경로를 정의
     }
 
     /* attemptAuthentication : 인증을 시도하는 필터 메소드
@@ -98,7 +99,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         //getPrincipal : 인증된 사용자의 정보
         CustomUser user = (CustomUser) authentication.getPrincipal(); //인증된 사용자의 정보를 호출 한다.
         int userNo = user.getUser().getUser_id();
-        String userId = user.getUser().getEmail();//후에 수정 변수명
+        String userId = user.getUser().getEmail();
 
         //권한을 확인할 수 있는 로직
         List<String> roles = user.getUser().getAuthList().stream()

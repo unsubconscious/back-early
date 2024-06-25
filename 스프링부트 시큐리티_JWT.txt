@@ -30,3 +30,4 @@ prop
 
 ◆ DeliveryOracle 로그인 & 회원가입 - user 테스트 rest api test 토큰
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MTg3OTQyNTMsInVubyI6IjEiLCJ1aWQiOiJ1c2VyIiwicm9sIjpbIlJPTEVfVVNFUiJdfQ.FN8RjlH7_xcvJxGUgN1jAfUOG3i5T5BDiB30cmHS6psbUtpPGxuCmquTamtQmcGHir5n1zQygWbPcr_t28ydHA
+

@@ -19,7 +19,7 @@ public class UserAuth {
     }
 
     public UserAuth(int authNo,String userId, String auth) {
-        this.authNo=authNo;
+        this.authNo = authNo;
         this.userId = userId;
         this.auth = auth;
     }

@@ -1,0 +1,14 @@
+[댓글 요청 경로 매핑]
+1. 특정 게시글의 종속된 댓글 목록
+- CommentsController
+[GET] /comment/{comment_id}
+<- 응답  1. 댓글 목록 데이터 JSON 형식으로 넘기는 방법
+        2. 댓글 목록 뷰 HTML을 응답하는 방법
+2. 댓글 등록
+[POST] /reply
+
+3. 댓글 수정
+[PUT] /reply
+
+4. 댓글 삭제
+[DELETE] /reply

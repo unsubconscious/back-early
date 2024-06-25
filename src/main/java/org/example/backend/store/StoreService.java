@@ -2,9 +2,12 @@ package org.example.backend.store;
 
 import org.example.backend.service.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StoreService {
@@ -54,9 +57,12 @@ public class StoreService {
     public List<OrderVo> order(int id){
         return storeDao.order(id);
     }
+    //조리중
+    public int cook(int id){
+        return storeDao.cook(id);
+    }
 
     //라이더배정
-
     public int rider(int id){
         return storeDao.rider(id);
     }
@@ -66,8 +72,48 @@ public class StoreService {
         return storeDao.refuse(id);
     }
 
+    //업체 주문 내역 조회
+    public List<StoreOrderInformationVo> orderReceipt(int store_id){
+        return storeDao.orderReceipt(store_id);
+    }
 
+    //매출 내역 조회
+    public List<StoreOrderInformationVo> orderSales_info(int store_id){
+        return storeDao.orderSales_info(store_id);
+    }
 
+    //업체 수정전 내용 받아오기
+    public StoreRegistrationVo store_info(int id) {
+        //GlobalExceptionHandler 오류 발생시 여기로 넘어가서 내가 원하는 오류값을 나타낼수 있음
+        try {
+            return storeDao.store_info(id);
+        } catch (EmptyResultDataAccessException e) {
+            //내가 지정한 오류다 이름이다.
+            throw new StoreNotFoundException("Store not found for owner ID: " + id);
+        } catch (Exception e) {
+            throw new StoreServiceException("An error occurred while fetching store information", e);
+        }
+    }
+
+    //업체내용 수정하기
+    public int store_edit(StoreRegistrationVo storeRegistrationVo){
+
+        if(storeRegistrationVo.getStore_image()!=null){
+            //이미지가 존재할경우
+            return storeDao.store_edit_img(storeRegistrationVo);
+
+        }else{
+            //이미지가 존재하지 않을 경우
+            return storeDao.store_edit(storeRegistrationVo);
+        }
+
+    }
+
+    //업체 삭제 승인
+    public int store_delete(int id){
+        return storeDao.store_delete(id);
+
+    }
 
 
 }

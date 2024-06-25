@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.backend.comments.mapper.CommentsMapper">
+
+
+    <!-- 댓글 목록 -->
+    <select id="list" resultType="org.example.backend.comments.dto.CommentsVo">
+        SELECT * FROM COMMENTS
+        WHERE store_id = #{store_id}
+    </select>
+
+    <!-- 댓글 조회 -->
+    <select id="select" resultType="org.example.backend.comments.dto.CommentsVo">
+        SELECT *
+        FROM COMMENTS
+        WHERE store_id = #{store_id}
+
+    </select>
+
+    <!-- 댓글 등록 -->
+    <insert id="insert">
+        INSERT INTO COMMENTS( store_id, author_id, author_name, content, rating)
+        VALUES ( #{storeId}, #{authorId}, #{authorName}, #{content}, #{rating} )
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="update">
+        UPDATE COMMENTS
+            SET author_name = #{author_name}
+               ,content = #{content}
+               ,modification_date = #{modification_date}
+        WHERE
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="delete">
+        DELETE
+        FROM COMMENTS
+        WHERE comment_id = #{comment_id}
+    </delete>
+
+</mapper>

@@ -35,6 +35,8 @@ public class MessageController {
             System.out.println("존재하지 않는 사람입니다");
             //주문자한테 보내는거
             messagingTemplate.convertAndSendToUser(principal.getName(),"/topic/sendMessage", m);
+
+
         }
         else{
             ChatController.Messages my = new ChatController.Messages("true","true");
@@ -42,6 +44,8 @@ public class MessageController {
             messagingTemplate.convertAndSendToUser(na,"/topic/sendMessage", message);
             //주문자한테 보내는거
             messagingTemplate.convertAndSendToUser(principal.getName(),"/topic/sendMessage", my);
+            messagingTemplate.convertAndSendToUser(principal.getName(),"/topic/sendMessage2", message);
+
             System.out.println("보내기 완료");
             System.out.println(message);
         }

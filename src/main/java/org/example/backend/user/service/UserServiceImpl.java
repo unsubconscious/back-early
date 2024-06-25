@@ -34,8 +34,15 @@ public class UserServiceImpl implements UserService {
         3. 권한 등록
     */
 
+    // <회원 : user>
 
+    // 회원 조회
+    @Override
+    public User select(int email) throws Exception {
+        return userMapper.select(email);
+    }
 
+    // 회원 가입 (등록)
     @Override
     public int insert(User user) throws Exception {
         //비번 암호화
@@ -56,13 +63,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    //회원 조회
-    @Override
-    public User select(int email) throws Exception {
-        return userMapper.select(email);
-    }
-
-    //로그인
+    // 로그인
     @Override
     public void login(User user, HttpServletRequest request) throws Exception {
         String email = user.getEmail();
@@ -86,9 +87,152 @@ public class UserServiceImpl implements UserService {
         log.info("인증된 사용자 ID : " + authUser.getUsername());
 
         // 시큐리티 컨텍스트 인증된 사용자 등록 : 인증된 사용된 정보가 담겨야 하는 영역
-        //세션에 등록하여 사용하거나 시큐리티에 등록하려면
+        // 세션에 등록하여 사용하거나 시큐리티에 등록하려면
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
+    // <업체 : store>
+
+    @Override
+    public User select_store(int email) throws Exception {
+        return userMapper.select(email);
+    }
+
+    @Override
+    public int insert_store(User user) throws Exception {
+        //비번 암호화
+        String password = user.getPassword();
+        String encodedPw = passwordEncoder.encode(password);
+        user.setPassword(encodedPw);
+
+        int result = userMapper.insert(user);
+
+        if(result > 0) {
+            UserAuth userAuth = new UserAuth();
+            userAuth.setUserId(String.valueOf(user.getEmail()));
+            userAuth.setAuth("ROLE_STORE");
+            result = userMapper.insertAuth(userAuth);
+        }
+        return result;
+    }
+
+    @Override
+    public void login_store(User user, HttpServletRequest request) throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        log.info("eamil (업체 id) : " + email);
+        log.info("password : " + password);
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
+
+        token.setDetails(new WebAuthenticationDetails(request));
+
+        Authentication authentication = authenticationManager.authenticate(token);
+
+        log.info("인증 여부 : " + authentication.isAuthenticated());
+
+        org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        log.info("인증된 사용자 ID : " + authUser.getUsername());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    // <관리자 : admin>
+
+    @Override
+    public User select_admin(int email) throws Exception {
+        return userMapper.select(email);
+    }
+
+    @Override
+    public int insert_admin(User user) throws Exception {
+        //비번 암호화
+        String password = user.getPassword();
+        String encodedPw = passwordEncoder.encode(password);
+        user.setPassword(encodedPw);
+
+        //업체 (회원) 등록
+        int result = userMapper.insert(user);
+
+        //권한 등록
+        if(result > 0) {
+            UserAuth userAuth = new UserAuth();
+            userAuth.setUserId(String.valueOf(user.getEmail())); //String.valueOf를 쓰면 다양한 데이터 값을 문자열로 변환 할 수 있음.
+            userAuth.setAuth("ROLE_ADMIN"); //기본 권한 : 사용자 권한(ROLE_USER)
+            result = userMapper.insertAuth(userAuth);
+        }
+        return result;
+    }
+
+    @Override
+    public void login_admin(User user, HttpServletRequest request) throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        log.info("eamil (관리자 id) : " + email);
+        log.info("password : " + password);
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
+
+        token.setDetails(new WebAuthenticationDetails(request));
+
+        Authentication authentication = authenticationManager.authenticate(token);
+
+        log.info("인증 여부 : " + authentication.isAuthenticated());
+
+        org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        log.info("인증된 사용자 ID : " + authUser.getUsername());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    // <라이더 : Rider>
+
+    @Override
+    public User select_rider(int email) throws Exception {
+        return userMapper.select(email);
+    }
+
+    @Override
+    public int insert_rider(User user) throws Exception {
+        //비번 암호화
+        String password = user.getPassword();
+        String encodedPw = passwordEncoder.encode(password);
+        user.setPassword(encodedPw);
+
+        //업체 (회원) 등록
+        int result = userMapper.insert(user);
+
+        //권한 등록
+        if(result > 0) {
+            UserAuth userAuth = new UserAuth();
+            userAuth.setUserId(String.valueOf(user.getEmail())); //String.valueOf를 쓰면 다양한 데이터 값을 문자열로 변환 할 수 있음.
+            userAuth.setAuth("ROLE_RIDER"); //기본 권한 : 사용자 권한(ROLE_USER)
+            result = userMapper.insertAuth(userAuth);
+        }
+        return result;
+    }
+
+    @Override
+    public void login_rider(User user, HttpServletRequest request) throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        log.info("eamil (라이더 id) : " + email);
+        log.info("password : " + password);
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
+
+        token.setDetails(new WebAuthenticationDetails(request));
+
+        Authentication authentication = authenticationManager.authenticate(token);
+
+        log.info("인증 여부 : " + authentication.isAuthenticated());
+
+        org.springframework.security.core.userdetails.User authUser = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        log.info("인증된 사용자 ID : " + authUser.getUsername());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
 
 //    //회원 정보 수정
 //    @Override

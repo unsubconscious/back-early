@@ -28,8 +28,8 @@
 
     <!-- 회원 등록 -->
     <insert id="insert">
-        INSERT INTO UserInformation( Email, Password, Name)
-        VALUES ( #{email}, #{password}, #{name})
+        INSERT INTO UserInformation( Email, Password, Name )
+        VALUES ( #{email}, #{password}, #{name} )
     </insert>
 
     <!-- 회원 조회 -->

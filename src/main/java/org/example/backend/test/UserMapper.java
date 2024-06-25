@@ -10,7 +10,7 @@
 //public interface UserMapper {
 //    @Select("SELECT * FROM users")
 //    List<User> findAll();
-//
-//    @Select("SELECT * FROM users WHERE id = #{id}")
+////
+////    @Select("SELECT * FROM users WHERE id = #{id}")
 //    User findById(@Param("id") Long id);
 //}

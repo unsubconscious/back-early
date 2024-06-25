@@ -29,7 +29,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 // @preAuthorize, @postAuthorize, @Secured 활성화
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfig {
+public class SecurityConfig { //Spring Security 설정을 담당하는 SecurityConfig 클래스는 웹 애플리케이션의 보안 정책을 정의한다.
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
@@ -60,15 +60,16 @@ public class SecurityConfig {
 
         // 인가 설정 ✅
         http.authorizeHttpRequests(authorizeRequests ->
-                                    //어떤 경로에서든 접근 가능하도록 홈 경로를 지정해준다.
                                     authorizeRequests
                                             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() //정적자원의 경로 toStaticResources()를 가져와서 허용 해놓을 수도 있다.
-                                            .requestMatchers("/**").permitAll()
-//                                            .requestMatchers("/login").permitAll()
-
-                                            //.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") //hasAnyRole 메서드로 유저와 어드민 권한을 지정, 여러 경로 지정시 hasAnyRole()를 사용
+                                            .requestMatchers("/**").permitAll() //어떤 경로에서든 접근 가능하도록 홈 경로를 지정해준다.
                                             .requestMatchers("/user/**").permitAll() //hasAnyRole 메서드로 유저와 어드민 권한을 지정, 여러 경로 지정시 hasAnyRole()를 사용
-                                            .requestMatchers("/admin/**").hasRole("ADMIN") //하나의 경로만 지정할때는 hasRole로 할 수 있다.
+
+
+//                                            .requestMatchers("/admin/**").hasAnyRole("USER", "STORE", "ADMIN") //테스트용으로 만든 권한 이렇게 권한 세가지를 넣어 테스트 하였을때 성공했음.
+//                                            .requestMatchers("/login").permitAll()
+                                            //.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") //hasAnyRole 메서드로 유저와 어드민 권한을 지정, 여러 경로 지정시 hasAnyRole()를 사용
+                                            //.requestMatchers("/admin/approvals/**").hasRole("ADMIN") //하나의 경로만 지정할때는 hasRole로 할 수 있다.
                                             .anyRequest().authenticated() //이외의 나머지 요청들은 인증이 가능한 사용자만 요청하도록 한다는 의미
                                     );
 
@@ -94,8 +95,5 @@ public class SecurityConfig {
         this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
 
         return authenticationManager;
-
     }
-
-
 }

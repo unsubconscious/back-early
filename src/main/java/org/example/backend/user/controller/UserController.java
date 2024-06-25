@@ -41,7 +41,7 @@ public class UserController {
         log.info("user : " + user);
 
         // 인증된 사용자 정보
-        if(user != null)
+        if (user != null)
             return new ResponseEntity<>(user, HttpStatus.OK);
 
         // 인증 되지 않았을 경우
@@ -53,9 +53,8 @@ public class UserController {
         @return
         @throws Exception
     */
-
     @PostMapping("")
-    public ResponseEntity<?> join(@RequestBody User user) throws Exception {
+    public ResponseEntity<?> user(@RequestBody User user) throws Exception {
         log.info("[POST] - /users");
         int result = userService.insert(user);
 
@@ -69,9 +68,53 @@ public class UserController {
         }
     }
 
+    //업체 회원가입
+    @PostMapping("/store")
+    public ResponseEntity<?> join_store(@RequestBody User user) throws Exception {
+        log.info("[POST] - /store");
+        int result = userService.insert_store(user);
 
+        if(result > 0) {
+            log.info("회원가입 성공! - SUCCESS");
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            log.info("회원가입 실패! - FAIL");
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    //관리자 회원가입
+    @PostMapping("/admin")
+    public ResponseEntity<?> join_admin(@RequestBody User user) throws Exception {
+        log.info("[POST] - /admin");
+        int result = userService.insert_admin(user);
 
+        if(result > 0) {
+            log.info("회원가입 성공! - SUCCESS");
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            log.info("회원가입 실패! - FAIL");
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //라이더 회원가입
+    @PostMapping("/rider")
+    public ResponseEntity<?> join_rider(@RequestBody User user) throws Exception {
+        log.info("[POST] - /rider");
+        int result = userService.insert_rider(user);
+
+        if(result > 0) {
+            log.info("회원가입 성공! - SUCCESS");
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            log.info("회원가입 실패! - FAIL");
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /* 회원 정보 수정
         @param user
@@ -85,7 +128,7 @@ public class UserController {
 //    public ResponseEntity<?> update(@RequestBody User user) throws Exception {
 //        log.info("[PUT] - /users");
 //        int result = userService.insert(user);
-//
+
 //        if(result > 0) {
 //            log.info("회원 수정 성공! - SUCCESS");
 //            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
