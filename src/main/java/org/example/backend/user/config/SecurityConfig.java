@@ -1,8 +1,7 @@
 package org.example.backend.user.config;
 
-import org.example.backend.user.security.jwt.filter.JwtRequestFilter;
+import org.example.backend.user.security.jwt.filter.*;
 import org.example.backend.user.security.custom.CustomUserDetailService;
-import org.example.backend.user.security.jwt.filter.JwtAuthenticationFilter;
 import org.example.backend.user.security.jwt.provider.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +51,18 @@ public class SecurityConfig { //Spring Security 설정을 담당하는 SecurityC
         http.csrf( csrf -> csrf.disable() );
 
         // 필터 설정 ✅
-        http.addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider), //addFilterAt() 인자에는 설정해줄 객체를 넣어주면 되고
-                        UsernamePasswordAuthenticationFilter.class) // 두번째 인자에는 스프링 시큐리티에서 어떤 필터를 동작시킬껀지에 대해 사용되는 필터 클래스를 넣어준다.
+//        http.addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider), //addFilterAt() 인자에는 설정해줄 객체를 넣어주면 되고
+//                        UsernamePasswordAuthenticationFilter.class) // 두번째 인자에는 스프링 시큐리티에서 어떤 필터를 동작시킬껀지에 대해 사용되는 필터 클래스를 넣어준다.
+//
+//                .addFilterBefore(new JwtRequestFilter(jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class);
 
-                .addFilterBefore(new JwtRequestFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new JwtAuthenticationFilter2(authenticationManager, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new JwtAuthenticationFilter3(authenticationManager, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new JwtAuthenticationFilter4(authenticationManager, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtRequestFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
 
         // 인가 설정 ✅
         http.authorizeHttpRequests(authorizeRequests ->

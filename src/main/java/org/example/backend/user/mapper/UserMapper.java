@@ -24,4 +24,7 @@ public interface UserMapper {
 
     //회원 삭제
     public int delete(String user_id) throws Exception;
+
+    //이메일체크
+    public int checkEmail(String email);
 }

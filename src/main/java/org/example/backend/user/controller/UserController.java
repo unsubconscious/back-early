@@ -11,6 +11,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /*
     회원 정보
     [GET] /user/info - 회원정보 조회 (ROLE_USER)
@@ -61,6 +63,8 @@ public class UserController {
         if(result > 0) {
             log.info("회원가입 성공! - SUCCESS");
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        } else if(result==-7){
+            return new ResponseEntity<>("emailFAIL", HttpStatus.OK);
         }
         else {
             log.info("회원가입 실패! - FAIL");
@@ -78,6 +82,9 @@ public class UserController {
             log.info("회원가입 성공! - SUCCESS");
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
         }
+        else if(result==-7){
+            return new ResponseEntity<>("emailFAIL", HttpStatus.OK);
+        }
         else {
             log.info("회원가입 실패! - FAIL");
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
@@ -93,6 +100,9 @@ public class UserController {
         if(result > 0) {
             log.info("회원가입 성공! - SUCCESS");
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else if(result==-7){
+            return new ResponseEntity<>("emailFAIL", HttpStatus.OK);
         }
         else {
             log.info("회원가입 실패! - FAIL");
@@ -115,6 +125,17 @@ public class UserController {
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+
+    //유저 이메일 확인
+    @PostMapping("/checkEmail")
+    public String checkEmail(@RequestBody Map<String,String> emailInfo){
+        String email=emailInfo.get("email");
+        System.out.println(email);
+        return userService.checkEmail(email);
+
+    }
+
+
 
     /* 회원 정보 수정
         @param user

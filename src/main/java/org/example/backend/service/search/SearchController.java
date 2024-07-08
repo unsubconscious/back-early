@@ -1,9 +1,10 @@
 package org.example.backend.service.search;
 
+import org.example.backend.comments.dto.CommentsVo;
 import org.example.backend.service.OrderListVo;
 import org.example.backend.service.OrderVo;
-import org.example.backend.store.StoreInformationVo;
-import org.example.backend.store.StoreRegistrationVo;
+import org.example.backend.store.dto.StoreInformationVo;
+import org.example.backend.store.dto.StoreRegistrationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,14 @@ public class SearchController {
     //웹소켓을 위해 음식점 주인의 이메일 을 탐색한다.
     @GetMapping("/email_shop")
     public String email(@RequestParam("id") int id){
-            searchService.email(id);
 
             return  searchService.email(id);
+    }
+    //이메일을 검색하여 현재 그 유저가 로그인 중인지 확인하는 절차
+    @GetMapping("/emailTrue")
+    public String emailTrue(@RequestParam("id") int id){
+        System.out.println(searchService.emailTrue(id));
+        return  searchService.emailTrue(id);
     }
 
     // 사용자 주문 정보 가져오기
@@ -67,5 +73,12 @@ public class SearchController {
 
 
     }
+
+    //사용자 리뷰 목록 불러오기
+    @GetMapping("review")
+    public List<CommentsVo> review(@RequestParam("id") int id){
+        return searchService.review(id);
+    }
+
 
     }

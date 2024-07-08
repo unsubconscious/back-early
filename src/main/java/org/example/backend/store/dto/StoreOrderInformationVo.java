@@ -1,4 +1,4 @@
-package org.example.backend.admin;
+package org.example.backend.store.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class AdminOrderInformationVo {
+public class StoreOrderInformationVo {
     private int order_id;
     private int customer_id;
     private int store_id;

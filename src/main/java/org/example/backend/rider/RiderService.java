@@ -1,5 +1,6 @@
 package org.example.backend.rider;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,15 +83,12 @@ public class RiderService {
         else
             return -1;
 
-
-
     }
 
     //콜수락한거 목록조회
     public List<RiderVo> orderCall(int id){
 
         return riderDao.orderCall(id);
-
 
     }
 
@@ -105,6 +103,15 @@ public class RiderService {
             return 1;
         else
             return -1;
+    }
+
+    //라이더 완료 내역 출력
+    public List<RiderVo> Receipt(int riderId){
+        return riderDao.riderReceipt(riderId);
+    }
+
+    public List<RiderVo> Revenue(int riderId){
+        return riderDao.riderRevenue(riderId);
     }
 
 }

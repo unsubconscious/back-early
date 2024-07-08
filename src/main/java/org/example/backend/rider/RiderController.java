@@ -1,5 +1,6 @@
 package org.example.backend.rider;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +42,21 @@ public class RiderController {
     @PostMapping("/order/finish")
     public int finish(@RequestBody RiderVo riderVo){
 
-
         return riderService.finish(riderVo);
     }
 
+    //라이더 완료 내역 출력
+    @GetMapping("/riderReceipt")
+    public List<RiderVo> Receipt(@RequestParam("riderId") int riderId){
+        return riderService.Receipt(riderId);
+
+    }
+
+    //라이더 매출 그래프
+    @GetMapping("/riderRevenue")
+    public List<RiderVo> Revenue(@RequestParam("riderId") int riderId){
+//        log.info("현재 배달 내역 조회하기! " + ", order_approval_status (주문 승인 상태 값 조회) : " + deliveryStatus);
+        return riderService.Revenue(riderId);
+    }
 
 }

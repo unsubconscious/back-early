@@ -1,14 +1,16 @@
 package org.example.backend.admin;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.store.StoreOrderInformationVo;
+import org.example.backend.admin.dto.*;
+import org.example.backend.service.StoreReportVo;
+import org.example.backend.store.dto.ReportsVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -53,11 +55,60 @@ public class AdminController {
         log.info("현재 매출 내역 조회하기! " + ", order_approval_status (주문 승인 상태 값 조회) : " + order_approval_status);
         return adminService.ManagerRevenue(order_approval_status);
     }
-}
-//    실패한코드 이유? (당연하지 RequestMethod.POST 로 요청했으므로 Body로 받아와야 한다.)
-//    @RequestMapping(value = "/approve", method = RequestMethod.POST)
-//    public void setAdminApproval(@RequestParam("owner_id") int owner_id){
-//        System.out.println("[AdminController] setAdminApproval()");
+
+    //업체쪽에서 유저 신고한 내용확인하기
+    @GetMapping("/Reports")
+    public List<ReportsUserVo> userReport(){
+        return adminService.userReport();
+    }
+
+    //유저 신고 내용 상세 조회
+    @GetMapping("ReportsDetail")
+    public List<ReportsUserDetailVo> userDetail(@RequestParam("id") int authorId){
+        return adminService.userDetail(authorId);
+    }
+
+    //유저 블락 먹이기
+    @PostMapping("block")
+    public ResponseEntity<?> block (@RequestBody Map<String, Integer> id){
+        //아이디값을 받아와서 그 아이디 값하고 같은 이메일의 유저 권한을 변경한다.
+        int rs=adminService.block(id.get("id"));
+        if (rs==1){
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
 //
-//        adminService.setAdminApproval(owner_id);
-//    }
+    }
+
+    //유저쪽에서 업체 신고한 내용확인하기
+    @GetMapping("/StoreReports")
+    public List<ReportStoreVo> storeReport(){
+        return adminService.storeReport();
+    }
+
+    //유저쪽에서 업체 신고한 내용 상세조회
+    @GetMapping("StoreReportsDetail")
+    public List<ReportStoreDetailVo> storeDetail(@RequestParam("storeId") int storeId){
+        return adminService.storeDetail(storeId);
+    }
+
+    //업체 정지시키기 가시성 2 로 지정하기
+    @PostMapping("Storeblock")
+    public ResponseEntity<?> Storeblockblock (@RequestBody Map<String, Integer> id){
+        //아이디값을 받아와서 그 아이디 값하고 같은 이메일의 유저 권한을 변경한다.
+        int rs=adminService.Storeblockblock(id.get("id"));
+        if (rs==1){
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+//
+    }
+
+
+
+}
+

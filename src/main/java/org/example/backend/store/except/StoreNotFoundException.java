@@ -1,4 +1,4 @@
-package org.example.backend.store;
+package org.example.backend.store.except;
 
 // StoreNotFoundException 예외 클래스
 public class StoreNotFoundException extends RuntimeException {

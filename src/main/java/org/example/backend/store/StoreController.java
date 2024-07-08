@@ -1,7 +1,12 @@
 package org.example.backend.store;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.comments.dto.CommentsVo;
 import org.example.backend.service.OrderVo;
+import org.example.backend.store.dto.ReportsVo;
+import org.example.backend.store.dto.StoreInformationVo;
+import org.example.backend.store.dto.StoreOrderInformationVo;
+import org.example.backend.store.dto.StoreRegistrationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +27,12 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 //    private static final String URL="C:\\Users\\KOSTA\\Desktop\\finalfr\\public\\imgs\\";
-//    private static final String URL="C:\\Users\\kjk98\\OneDrive\\바탕 화면\\koster\\frontend\\public\\imgs\\";
+    private static final String URL="C:\\Users\\kjk98\\OneDrive\\바탕 화면\\koster\\frontend\\public\\imgs\\";
 
     //내꺼
-//    private static final String URL="E:\\h\\DeliveryOracle\\frontend\\public\\imgs";
+//    private static final String URL="E:\\h\\DeliveryOracle\\FE\\src\\imgs\\";
     //소니
-    private static final String URL="C:\\GitSource\\front_com\\public\\imgs\\";
+//    private static final String URL="C:\\GitSource\\front_com\\public\\imgs\\";
     //상점등록
     @PostMapping("/join")
     public String storeJoin(        @RequestParam("name") String name,
@@ -86,10 +91,14 @@ public class StoreController {
         log.info(":::: 업체 승인 확인 요청 ::::");
 
         int rs=storeService.count(id);
+
         if(rs>0){
             return rs;
         }
-        else {
+        else if(rs==-2) {
+            return -2;
+        }
+        else{
             return -1;
         }
     }
@@ -142,7 +151,7 @@ public class StoreController {
 
     }
     //메뉴 수정하기
-
+    //put으로 수정
     @PostMapping("menuedit")
 
     public int menuedit(@RequestParam("name") String name,
@@ -184,6 +193,7 @@ public class StoreController {
     }
 
     //메뉴 삭제하기
+    //del로 수정
     @GetMapping("/menuedel")
     public int menudel(@RequestParam("id") int id,@RequestParam("name") String name){
         log.info(":::: 메뉴삭제하기 ::::");
@@ -193,7 +203,7 @@ public class StoreController {
     //주문 받기
     //상점아이디를 받아온다
     @PostMapping("/order")
-    public List<OrderVo> order(@RequestBody OrderVo orderVo){
+    public List<StoreOrderInformationVo> order(@RequestBody OrderVo orderVo){
         log.info(":::: 주문알람 리스트 반환 ::::");
         return storeService.order(orderVo.getStoreId());
 
@@ -233,6 +243,7 @@ public class StoreController {
     }
 
     //업체 수정전 내용 받아오기
+    //put
     @PostMapping("/store_edit_info")
     //받아올 데이터는 주인 아이디값
     public StoreRegistrationVo store_info(@RequestBody Map<String, Integer> data){
@@ -244,6 +255,7 @@ public class StoreController {
 
     }
     //업체수정
+    //put
     @PostMapping("/store_edit")
     public ResponseEntity<?> store_edit(        @RequestParam("name") String name,
                                                 @RequestParam("address") String address,
@@ -299,6 +311,7 @@ public class StoreController {
     }
 
     //업체 삭제
+    //del
     @PostMapping("/delete")
     public ResponseEntity<?> store_delete(@RequestBody Map<String, Integer> data){
         int store_id = data.get("store_id");
@@ -307,6 +320,44 @@ public class StoreController {
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
         }
         else {
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //댓글 목록보기
+    @GetMapping("commentList")
+    public List<CommentsVo> commentList(@RequestParam("storeid") int id){
+        log.info("업체 댓글 불러오기" );
+        return  storeService.commentList(id);
+    }
+
+    //댓글 신고하기
+    //받는 값 댓글 아이디 , 댓글 작성자 아이디,신고자 아이디, 신고내용
+    @PostMapping("report")
+    public ResponseEntity<?> report (@RequestBody ReportsVo reportsVo){
+        int rs=storeService.report(reportsVo);
+        if (rs==1){
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    //업체 등록 했는지 안했는지 확인하기
+    @GetMapping("exist")
+    public ResponseEntity<?> exist (@RequestParam("id") int id){
+        int rs=storeService.exist(id);
+        if (rs==1){
+            //200
+            return new ResponseEntity<>("exist", HttpStatus.OK);
+        }
+        else if(rs==2){
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            //400
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
     }

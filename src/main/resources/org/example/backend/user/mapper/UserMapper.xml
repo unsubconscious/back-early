@@ -6,6 +6,7 @@
 <!-- 실제 인터페이스 경로랑 일치시켜야 함-->
 <mapper namespace="org.example.backend.user.mapper.UserMapper">
 
+
     <!-- Users 매핑 : 회원 테이블과 회원권한 테이블을 1:다 매핑처리 -->
     <resultMap type="User" id="userMap">
         <id property="user_id" column="user_id" />

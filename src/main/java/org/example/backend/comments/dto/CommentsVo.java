@@ -1,12 +1,10 @@
 package org.example.backend.comments.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 
-//댓글
 @Getter
 @Setter
 public class CommentsVo {
@@ -19,6 +17,6 @@ public class CommentsVo {
     private int visibilityStatus; // 가시성 상태, 0 or 1
     private Timestamp creationDate; // 작성 날짜, (기본값 현재 시간)
     private Timestamp modificationDate; // 수정 날짜, (기본값 현재 시간, 수정시 자동갱신)
-    private int replyId; // 대댓글 id
-    private int depth; // 댓글의 경우 1로 표현, 대댓글의 경우 2로 표현
+    private int replyId; // 부모 댓글 ID
+    private int depth; // 댓글의 깊이 (1번 : 댓글, 2번 : 대댓글)
 }

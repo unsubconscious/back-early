@@ -5,7 +5,9 @@ import org.example.backend.user.dto.User;
 import org.example.backend.user.dto.UserAuth;
 import org.example.backend.user.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.user.mapper.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +25,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder; //스프링시큐리티에 비밀번호 암호화 기능을 가져와서 자동주입 시킨다.
 
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userMapper;
+    //private UserMapper userMapper;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -38,34 +41,46 @@ public class UserServiceImpl implements UserService {
 
     // 회원 조회
     @Override
-    public User select(int email) throws Exception {
-        return userMapper.select(email);
+    public User select(int user_id) throws Exception {
+        return userMapper.select(user_id);
     }
 
     // 회원 가입 (등록)
     @Override
     public int insert(User user) throws Exception {
-        //비번 암호화
-        String password = user.getPassword(); //Users dto에서 넘어온 패스워드를 꺼내야한다.
-        String encodedPw = passwordEncoder.encode(password); //암호화된 pw
-        user.setPassword(encodedPw);
+        try {
+            // 비번 암호화
+            String password = user.getPassword();
+            String encodedPw = passwordEncoder.encode(password);
+            user.setPassword(encodedPw);
 
-        //회원 등록
-        int result = userMapper.insert(user);
+            int result = userMapper.insert(user);
 
-        //권한 등록
-        if(result > 0) {
-            UserAuth userAuth = new UserAuth();
-            userAuth.setUserId(String.valueOf(user.getEmail())); //String.valueOf를 쓰면 다양한 데이터 값을 문자열로 변환 할 수 있음.
-            userAuth.setAuth("ROLE_USER"); //기본 권한 : 사용자 권한(ROLE_USER)
-            result = userMapper.insertAuth(userAuth);
+            if (result > 0) {
+                UserAuth userAuth = new UserAuth();
+                userAuth.setUserId(String.valueOf(user.getEmail()));
+                userAuth.setAuth("ROLE_USER");
+                result = userMapper.insertAuth(userAuth);
+            }
+            return result;
+
+        } catch (DuplicateKeyException e){
+            return -7;//이메일 중복이다
+
+        }catch (Exception e) {
+            // 일반적인 예외 처리
+            System.err.println(e);
+            // 필요한 경우 로그 기록이나 다른 처리
+            throw e; // 필요에 따라 예외를 다시 던질 수도 있음
         }
-        return result;
+
+
     }
 
     // 로그인
     @Override
     public void login(User user, HttpServletRequest request) throws Exception {
+        System.out.println("login 실행");
         String email = user.getEmail();
         String password = user.getPassword();
         log.info("eamil (user의 실제 id) : " + email);
@@ -100,21 +115,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int insert_store(User user) throws Exception {
-        //비번 암호화
-        String password = user.getPassword();
-        String encodedPw = passwordEncoder.encode(password);
-        user.setPassword(encodedPw);
+        try {
+            // 비번 암호화
+            String password = user.getPassword();
+            String encodedPw = passwordEncoder.encode(password);
+            user.setPassword(encodedPw);
 
-        int result = userMapper.insert(user);
+            int result = userMapper.insert(user);
 
-        if(result > 0) {
-            UserAuth userAuth = new UserAuth();
-            userAuth.setUserId(String.valueOf(user.getEmail()));
-            userAuth.setAuth("ROLE_STORE");
-            result = userMapper.insertAuth(userAuth);
+            if (result > 0) {
+                UserAuth userAuth = new UserAuth();
+                userAuth.setUserId(String.valueOf(user.getEmail()));
+                userAuth.setAuth("ROLE_STORE");
+                result = userMapper.insertAuth(userAuth);
+            }
+            return result;
+
+        } catch (DuplicateKeyException e){
+            return -7;//이메일 중복이다
+
+        }catch (Exception e) {
+            // 일반적인 예외 처리
+            System.err.println(e);
+            // 필요한 경우 로그 기록이나 다른 처리
+            throw e; // 필요에 따라 예외를 다시 던질 수도 있음
         }
-        return result;
     }
+
 
     @Override
     public void login_store(User user, HttpServletRequest request) throws Exception {
@@ -233,6 +260,24 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    @Override
+    public String checkEmail(String email){
+        int rs=0;
+        try{
+           rs=  userMapper.checkEmail(email);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(rs);
+        if(rs>=1){
+            return "false";
+        }
+        else{
+            return "available";
+        }
+
+    }
 
 //    //회원 정보 수정
 //    @Override

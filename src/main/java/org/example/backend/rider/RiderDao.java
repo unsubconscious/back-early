@@ -1,14 +1,13 @@
 package org.example.backend.rider;
 
 
-import org.example.backend.service.OrderVo;
-import org.example.backend.store.StoreInformationVo;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class RiderDao {
 
     //배달전체 목록 불러오기
     public List<RiderVo> orderlist(BigDecimal x, BigDecimal y){
-
 
         String sql = "SELECT \n" +
                 "    o.order_id,\n" +
@@ -120,8 +118,6 @@ public class RiderDao {
         return rs;
     }
 
-
-
     public int orderfinish( RiderVo riderVo){
         String sql ="UPDATE orderinformation SET order_approval_status = 4 WHERE order_id = ?";
         int rs=-1;
@@ -134,7 +130,36 @@ public class RiderDao {
             return -1;
         }
 
+    }
 
+    public List<RiderVo> riderReceipt( int riderId) {
+        String sql = "select * from RiderDelivery where rider_id=? and delivery_status=1";
+        List<RiderVo> riderVos = new ArrayList<RiderVo>();
+        RowMapper<RiderVo> rowMapper = BeanPropertyRowMapper.newInstance(RiderVo.class);
+        try {
+            riderVos = jdbcTemplate.query(sql, rowMapper, riderId);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
+        return riderVos;
+    }
+
+    public List<RiderVo> riderRevenue(int riderId){
+        String sql = "SELECT rider_id, delivery_price, delivery_id, order_date  " +
+                "FROM RiderDelivery " +
+                "WHERE rider_id = ? and delivery_status=1";
+
+        List<RiderVo> Revenue = new ArrayList<RiderVo>();
+        RowMapper<RiderVo> rowMapper= BeanPropertyRowMapper.newInstance(RiderVo.class);
+        try {
+            Revenue = jdbcTemplate.query(sql, rowMapper,riderId);
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return Revenue;
     }
 
 }

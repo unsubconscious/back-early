@@ -1,13 +1,19 @@
 package org.example.backend.store;
 
-import org.example.backend.service.OrderVo;
+import org.example.backend.comments.dto.CommentsVo;
+import org.example.backend.store.dto.ReportsVo;
+import org.example.backend.store.dto.StoreInformationVo;
+import org.example.backend.store.dto.StoreOrderInformationVo;
+import org.example.backend.store.dto.StoreRegistrationVo;
+import org.example.backend.store.except.StoreNotFoundException;
+import org.example.backend.store.except.StoreServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class StoreService {
@@ -54,7 +60,7 @@ public class StoreService {
     }
 
     //주문알람
-    public List<OrderVo> order(int id){
+    public List<StoreOrderInformationVo> order(int id){
         return storeDao.order(id);
     }
     //조리중
@@ -112,6 +118,31 @@ public class StoreService {
     //업체 삭제 승인
     public int store_delete(int id){
         return storeDao.store_delete(id);
+
+    }
+
+    //댓글 목록불러오기
+    public List<CommentsVo> commentList(int id){
+        return  storeDao.commentList(id);
+    }
+
+    //댓글신고하기
+    @Transactional
+    public int report(ReportsVo reportsVo){
+        //댓글신고테이블에 기입
+        int data1=storeDao.report(reportsVo);
+        //댓글 테이블 상태 수정 2로
+        int data2=storeDao.reportOrder(reportsVo.getCommentId());
+
+
+      return 1;
+
+
+    }
+    //업체가 존재하는 확인
+    public int exist(int id){
+
+        return storeDao.exist(id);
 
     }
 

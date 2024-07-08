@@ -1,4 +1,4 @@
-package org.example.backend.store;
+package org.example.backend.store.except;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

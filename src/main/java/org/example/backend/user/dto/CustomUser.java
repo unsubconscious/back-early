@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/* CustomUser 클래스는 Users 라는 DTO가 사용자 정보를 담고 있는데
+/* CustomUser 클래스는 user라는 DTO가 사용자 정보를 담고 있는데
    해당 정보(형식)를 스프링시큐리티한테 맞는 형식으로 넘겨주기 위한 용도로 생성한 클래스
  */
 @Data

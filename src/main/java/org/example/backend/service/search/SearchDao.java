@@ -1,9 +1,10 @@
 package org.example.backend.service.search;
 
+import org.example.backend.comments.dto.CommentsVo;
 import org.example.backend.service.OrderListVo;
 import org.example.backend.service.OrderVo;
-import org.example.backend.store.StoreInformationVo;
-import org.example.backend.store.StoreRegistrationVo;
+import org.example.backend.store.dto.StoreInformationVo;
+import org.example.backend.store.dto.StoreRegistrationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,7 +73,6 @@ public class SearchDao {
 
         }
 
-
         return rs;
     }
 
@@ -92,7 +92,22 @@ public class SearchDao {
         }
         return email;
     }
-    
+
+    public String emailTrue(int id){
+
+        String sql="select Email from userinformation where user_id=?";
+        String email=null;
+
+        try{
+            email= jdbcTemplate.queryForObject(sql,String.class,id);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return email;
+    }
     //주문내역 조회
 
     public List<OrderListVo> getUserOrders(int userId) {
@@ -131,5 +146,53 @@ public class SearchDao {
         return stores;
     }
 
+    //ai 조회
+    public List<StoreRegistrationVo> storeList3(BigDecimal x, BigDecimal y,String word) {
+        String sql ="select * from storeregistration s\n" +
+                "join storeinformation sf on sf.store_id =s.store_id\n" +
+                "where sf.visibility_status = 1 and sf.menu_name LIKE CONCAT('%', ?, '%') AND store_x BETWEEN ? - 0.08 AND ? + 0.08 AND store_y BETWEEN ? - 0.08 AND ? + 0.08;";
+        List<StoreRegistrationVo> stores = new ArrayList<>();
+        RowMapper<StoreRegistrationVo> rowMapper = BeanPropertyRowMapper.newInstance(StoreRegistrationVo.class);
+
+        try {
+            return jdbcTemplate.query(sql,rowMapper,word,x,x,y,y);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return stores;
+        }
+    }
+
+    //사용자 리뷰 목록 불러오기
+    public List<CommentsVo> review(int id){
+
+        String sql = "SELECT \n" +
+                "    comment_id,\n" +
+                "    store_id,\n" +
+                "    author_id,\n" +
+                "    author_name,\n" +
+                "    content,\n" +
+                "    rating,\n" +
+                "    visibility_status,\n" +
+                "creation_date,\n"+
+                "    depth\n" +
+                "FROM \n" +
+                "    Comments\n" +
+                "WHERE \n" +
+                "    author_id = ? \n" +
+                "    AND visibility_status IN (1, 2)\n" +
+                "ORDER BY \n" +
+                "    comment_id DESC;\n";
+        List<CommentsVo> commentLists = new ArrayList<CommentsVo>();
+        RowMapper<CommentsVo> rowMapper= BeanPropertyRowMapper.newInstance(CommentsVo.class);
+        try {
+            commentLists = jdbcTemplate.query(sql, rowMapper, id);
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return commentLists;
+
+    }
 
 }
+

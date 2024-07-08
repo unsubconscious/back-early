@@ -34,7 +34,7 @@ public class WebSocketEventListener {
 //            String username = authorizationHeaders.get(0).substring(7);
             Authentication authentication = jwtTokenProvider.getAuthentication(authorizationHeaders.get(0));
             String username = authentication.getName();
-            System.out.println("이름"+username);
+            System.out.println("접속된 사용자명 : " + username);
             // Remove "Bearer " prefix
             sessionRegistry.registerSession(sessionId, username);
         }

@@ -6,7 +6,7 @@ public interface UserService {
     // <회원 : user>
 
     //조회
-    public User select(int email) throws Exception;
+    public User select(int userId) throws Exception;
 
     //등록
     public int insert(User user) throws Exception;
@@ -16,7 +16,7 @@ public interface UserService {
 
     // <업체 : store>
 
-    public User select_store(int email) throws Exception;
+    public User select_store(int userId) throws Exception;
 
     public int insert_store(User user) throws Exception;
 
@@ -24,7 +24,7 @@ public interface UserService {
 
     // <관리자 : admin>
 
-    public User select_admin(int email) throws Exception;
+    public User select_admin(int userId) throws Exception;
 
     public int insert_admin(User user) throws Exception;
 
@@ -32,11 +32,13 @@ public interface UserService {
 
     // <라이더 : rider>
 
-    public User select_rider(int email) throws Exception;
+    public User select_rider(int userId) throws Exception;
 
     public int insert_rider(User user) throws Exception;
 
     public void login_rider(User user, HttpServletRequest request) throws Exception;
+
+    public String checkEmail(String email) ;
 
 
 //    //회원 수정

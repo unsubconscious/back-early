@@ -1,4 +1,4 @@
-package org.example.backend.admin;
+package org.example.backend.admin.dto;
 
 import lombok.Getter;
 import lombok.Setter;
